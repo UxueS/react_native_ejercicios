@@ -1,17 +1,37 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { Card } from '@rneui/themed';
+import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import { Card, Icon } from '@rneui/themed';
 import { EXCURSIONES } from '../comun/excursiones';
+import { COMENTARIOS } from '../comun/comentarios';
+
+function RenderComentario(props) {
+    const comentarios = props.comentarios;
+
+    return (
+        <Card>
+            <Card.Title>Comentarios</Card.Title>
+            <Card.Divider />
+            {
+                comentarios.map((comentario, index) => (
+                    <View key={index} style={styles.commentItem}>
+                        <Text style={{ fontSize: 14 }}>{comentario.comentario}</Text>
+                        <Text style={{ fontSize: 12 }}>{comentario.valoracion} Estrellas</Text>
+                        <Text style={{ fontSize: 12 }}>{'-- ' + comentario.autor + ', ' + comentario.dia}</Text>
+                    </View>
+                ))
+            }
+        </Card>
+    );
+}
 
 function RenderExcursion(props) {
-    const excursion = props.excursion;
+    const { excursion, favorita, onPress } = props;
 
     if (excursion != null) {
         return (
             <Card>
-                <Card.Divider />
-                <Card.Image 
-                    source={require('./imagenes/40Años.png')} 
+                <Card.Image
+                    source={require('./imagenes/40Años.png')}
                     style={styles.cardImage}
                 >
                     <Text style={styles.imageText}>
@@ -21,10 +41,24 @@ function RenderExcursion(props) {
                 <Text style={styles.descriptionText}>
                     {excursion.descripcion}
                 </Text>
+                <View style={styles.favoriteContainer}>
+                    <Icon
+                        raised
+                        reverse
+                        name={favorita ? 'heart' : 'heart-o'}
+                        type='font-awesome'
+                        color='#f50'
+                        onPress={() =>
+                            favorita
+                                ? console.log('La excursión ya se encuentra entre las favoritas')
+                                : onPress()
+                        }
+                    />
+                </View>
             </Card>
         );
     } else {
-        return (<View></View>);
+        return <View />;
     }
 }
 
@@ -32,14 +66,34 @@ class DetalleExcursion extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            excursiones: EXCURSIONES
+            excursiones: EXCURSIONES,
+            comentarios: COMENTARIOS,
+            favoritos: []
         };
     }
 
+    marcarFavorito(excursionId) {
+        this.setState({
+            favoritos: this.state.favoritos.concat(excursionId)
+        });
+    }
+
     render() {
-        const { excursionId } = this.props.route.params;
+        const {excursionId}= this.props.route.params;
+
         return (
-            <RenderExcursion excursion={this.state.excursiones[+excursionId]} />
+            <ScrollView>
+                <RenderExcursion
+                    excursion={this.state.excursiones[+excursionId]}
+                    favorita={this.state.favoritos.some(el => el === excursionId)}
+                    onPress={() => this.marcarFavorito(excursionId)}
+                />
+                <RenderComentario
+                    comentarios={this.state.comentarios.filter(
+                        comentario => comentario.excursionId === excursionId
+                    )}
+                />
+            </ScrollView>
         );
     }
 }
@@ -51,7 +105,7 @@ const styles = StyleSheet.create({
     },
     imageText: {
         position: 'absolute',
-        top: 0,
+        top: 40,
         color: 'chocolate',
         fontSize: 30,
         fontWeight: 'bold',
@@ -60,6 +114,13 @@ const styles = StyleSheet.create({
     },
     descriptionText: {
         margin: 20
+    },
+    commentItem: {
+        margin: 10
+    },
+    favoriteContainer: {
+        alignItems: 'flex-start',
+        margin: 10
     }
 });
 
