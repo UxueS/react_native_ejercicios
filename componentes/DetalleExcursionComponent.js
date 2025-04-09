@@ -3,13 +3,15 @@ import { Text, View, ScrollView, StyleSheet } from 'react-native';
 import { Card, Icon } from '@rneui/themed';
 import { EXCURSIONES } from '../comun/excursiones';
 import { COMENTARIOS } from '../comun/comentarios';
+import { baseUrl, colorGaztaroaClaro, colorGaztaroaOscuro } from '../comun/comun';
+
 
 function RenderComentario(props) {
     const comentarios = props.comentarios;
 
     return (
         <Card>
-            <Card.Title>Comentarios</Card.Title>
+            <Card.Title style={{ color: colorGaztaroaOscuro }}>Comentarios</Card.Title>
             <Card.Divider />
             {
                 comentarios.map((comentario, index) => (
@@ -30,10 +32,7 @@ function RenderExcursion(props) {
     if (excursion != null) {
         return (
             <Card>
-                <Card.Image
-                    source={require('./imagenes/40Años.png')}
-                    style={styles.cardImage}
-                >
+                <Card.Image source={{ uri: baseUrl + excursion.imagen }} style={styles.cardImage}>
                     <Text style={styles.imageText}>
                         {excursion.nombre}
                     </Text>
@@ -79,7 +78,7 @@ class DetalleExcursion extends Component {
     }
 
     render() {
-        const {excursionId}= this.props.route.params;
+        const { excursionId } = this.props.route.params;
 
         return (
             <ScrollView>
@@ -106,7 +105,7 @@ const styles = StyleSheet.create({
     imageText: {
         position: 'absolute',
         top: 40,
-        color: 'chocolate',
+        color: 'white', 
         fontSize: 30,
         fontWeight: 'bold',
         padding: 5,

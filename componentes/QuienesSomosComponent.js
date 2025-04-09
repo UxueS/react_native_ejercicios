@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, FlatList, ScrollView } from 'react-native';
 import { Card, ListItem, Avatar } from '@rneui/themed';
 import { ACTIVIDADES } from '../comun/actividades';
+import { baseUrl } from '../comun/comun';
 
 function Historia() {
   return (
@@ -28,7 +29,7 @@ class QuienesSomos extends Component {
   render() {
     const renderActividadItem = ({ item }) => (
       <ListItem bottomDivider>
-        <Avatar source={require('./imagenes/40Años.png')} />
+        <Avatar source={{ uri: baseUrl + item.imagen }} />
         <ListItem.Content>
           <ListItem.Title>{item.nombre}</ListItem.Title>
           <ListItem.Subtitle>{item.descripcion}</ListItem.Subtitle>

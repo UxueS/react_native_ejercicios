@@ -4,6 +4,7 @@ import { Card } from '@rneui/themed';
 import { EXCURSIONES } from '../comun/excursiones';
 import { CABECERAS } from '../comun/cabeceras';
 import { ACTIVIDADES } from '../comun/actividades';
+import { baseUrl } from '../comun/comun';
 
 function RenderItem(props) {
     const item = props.item;
@@ -11,9 +12,8 @@ function RenderItem(props) {
     if (item != null) {
         return (
             <Card>
-                <Card.Divider />
                 <Card.Image 
-                    source={require('./imagenes/40Años.png')} 
+                    source={{ uri: baseUrl + item.imagen }} 
                     style={styles.cardImage}
                 >
                     <Text style={styles.imageText}>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     },
     imageText: {
         position: 'absolute',
-        top: 0,
+        top: 40,
         color: 'chocolate',
         fontSize: 30,
         fontWeight: 'bold',

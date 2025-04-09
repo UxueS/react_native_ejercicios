@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@rneui/themed';
 import { Text } from 'react-native';
 
+
 function Contacto() {
   return (
     <Card>
