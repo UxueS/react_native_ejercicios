@@ -3,21 +3,21 @@ import { Text, View, ScrollView, StyleSheet } from 'react-native';
 import { Card, Icon } from '@rneui/themed';
 import { connect } from 'react-redux';
 import { baseUrl, colorGaztaroaOscuro } from '../comun/comun';
+import { postFavorito } from '../redux/ActionCreators'; 
 
 function RenderComentario({ comentarios }) {
   return (
     <Card>
-      <Card.Title style={{ color: colorGaztaroaOscuro }}>Comentarios</Card.Title>
+      <Card.Title style={{ color: 'black' }}>Comentarios</Card.Title>
+
       <Card.Divider />
-      {
-        comentarios.map((comentario, index) => (
-          <View key={index} style={styles.commentItem}>
-            <Text style={{ fontSize: 14 }}>{comentario.comentario}</Text>
-            <Text style={{ fontSize: 12 }}>{comentario.valoracion} Estrellas</Text>
-            <Text style={{ fontSize: 12 }}>{'-- ' + comentario.autor + ', ' + comentario.dia}</Text>
-          </View>
-        ))
-      }
+      {comentarios.map((comentario, index) => (
+        <View key={index} style={styles.commentItem}>
+          <Text style={{ fontSize: 14 }}>{comentario.comentario}</Text>
+          <Text style={{ fontSize: 12 }}>{comentario.valoracion} Estrellas</Text>
+          <Text style={{ fontSize: 12 }}>{'-- ' + comentario.autor + ', ' + comentario.dia}</Text>
+        </View>
+      ))}
     </Card>
   );
 }
@@ -52,24 +52,15 @@ function RenderExcursion({ excursion, favorita, onPress }) {
 }
 
 class DetalleExcursion extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      favoritos: []
-    };
-  }
-
   marcarFavorito(excursionId) {
-    this.setState({
-      favoritos: this.state.favoritos.concat(excursionId)
-    });
+    this.props.postFavorito(excursionId); 
   }
 
   render() {
     const { excursionId } = this.props.route.params;
     const excursion = this.props.excursiones.find((exc) => exc.id === excursionId);
     const comentarios = this.props.comentarios.filter((c) => c.excursionId === excursionId);
-    const esFavorita = this.state.favoritos.includes(excursionId);
+    const esFavorita = this.props.favoritos.includes(excursionId); 
 
     return (
       <ScrollView>
@@ -112,7 +103,12 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state) => ({
   excursiones: state.excursiones.excursiones,
-  comentarios: state.comentarios.comentarios
+  comentarios: state.comentarios.comentarios,
+  favoritos: state.favoritos.favoritos 
 });
 
-export default connect(mapStateToProps)(DetalleExcursion);
+const mapDispatchToProps = (dispatch) => ({
+  postFavorito: (excursionId) => dispatch(postFavorito(excursionId)) 
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(DetalleExcursion);

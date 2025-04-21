@@ -1,6 +1,7 @@
 import * as ActionTypes from './ActionTypes';
 import { baseUrl } from '../comun/comun';
 
+
 export const fetchComentarios = () => (dispatch) => {
     return fetch(baseUrl + 'comentarios')
     .then(response => {
@@ -141,3 +142,13 @@ export const addActividades = (actividades) => ({
     type: ActionTypes.ADD_ACTIVIDADES,
     payload: actividades
 });
+export const addFavorito = (excursionId) => ({
+    type: ActionTypes.ADD_FAVORITO,
+    payload: excursionId
+  });
+  
+  export const postFavorito = (excursionId) => (dispatch) => {
+    setTimeout(() => {
+      dispatch(addFavorito(excursionId));
+    }, 2000);
+  };

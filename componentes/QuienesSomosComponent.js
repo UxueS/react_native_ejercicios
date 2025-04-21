@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { Text, FlatList, ScrollView } from 'react-native';
+import { Text, FlatList, ScrollView, View } from 'react-native';
 import { Card, ListItem, Avatar } from '@rneui/themed';
 
 import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
+import { IndicadorActividad } from './IndicadorActividadComponent'; 
 
-const mapStateToProps = state => { return { actividades: state.actividades } }
+const mapStateToProps = state => {
+  return { actividades: state.actividades };
+};
 
 function Historia() {
   return (
@@ -22,9 +25,9 @@ function Historia() {
 }
 
 class QuienesSomos extends Component {
-
-
   render() {
+    const { isLoading, errMess, actividades } = this.props.actividades;
+
     const renderActividadItem = ({ item }) => (
       <ListItem bottomDivider>
         <Avatar source={{ uri: baseUrl + item.imagen }} />
@@ -41,13 +44,21 @@ class QuienesSomos extends Component {
         <Card>
           <Card.Title>"Actividades y recursos"</Card.Title>
           <Card.Divider />
-          <FlatList
-            
-            data={this.props.actividades.actividades}
-            renderItem={renderActividadItem}
-            keyExtractor={(item) => item.id.toString()}
-            scrollEnabled={false} 
-          />
+
+          {isLoading ? (
+            <IndicadorActividad />
+          ) : errMess ? (
+            <View style={{ padding: 10 }}>
+              <Text>Error: {errMess}</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={actividades}
+              renderItem={renderActividadItem}
+              keyExtractor={(item) => item.id.toString()}
+              scrollEnabled={false}
+            />
+          )}
         </Card>
       </ScrollView>
     );

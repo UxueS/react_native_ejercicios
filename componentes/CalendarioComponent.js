@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { ListItem, Avatar } from '@rneui/themed';
-import { SafeAreaView, FlatList, Text } from 'react-native';
+import { SafeAreaView, FlatList, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { baseUrl } from '../comun/comun';
+import { IndicadorActividad } from './IndicadorActividadComponent'; 
 
 const mapStateToProps = state => ({
   excursiones: state.excursiones
@@ -29,19 +30,19 @@ class Calendario extends Component {
 
     if (isLoading) {
       return (
-        <SafeAreaView>
-          <Text style={{ margin: 10 }}>Cargando excursiones...</Text>
+        <SafeAreaView style={{ flex: 1 }}>
+          <IndicadorActividad />
         </SafeAreaView>
       );
     } else if (errMess) {
       return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text style={{ margin: 10 }}>Error: {errMess}</Text>
         </SafeAreaView>
       );
     } else {
       return (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
           <FlatList
             data={excursiones}
             renderItem={renderCalendarioItem}

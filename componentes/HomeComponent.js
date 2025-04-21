@@ -3,11 +3,20 @@ import { Text, ScrollView, View, StyleSheet } from 'react-native';
 import { Card } from '@rneui/themed';
 import { connect } from 'react-redux';
 import { baseUrl } from '../comun/comun';
+import { IndicadorActividad } from './IndicadorActividadComponent';
 
 function RenderItem(props) {
   const item = props.item;
 
-  if (item != null) {
+  if (props.isLoading) {
+    return <IndicadorActividad />;
+  } else if (props.errMess) {
+    return (
+      <View>
+        <Text>{props.errMess}</Text>
+      </View>
+    );
+  } else if (item != null) {
     return (
       <Card>
         <Card.Image source={{ uri: baseUrl + item.imagen }} style={styles.cardImage}>
@@ -33,9 +42,21 @@ class Home extends Component {
 
     return (
       <ScrollView>
-        <RenderItem item={cabeceras.cabeceras.filter((item) => item.destacado)[0]} />
-        <RenderItem item={excursiones.excursiones.filter((item) => item.destacado)[0]} />
-        <RenderItem item={actividades.actividades.filter((item) => item.destacado)[0]} />
+        <RenderItem
+          item={cabeceras.cabeceras.filter((item) => item.destacado)[0]}
+          isLoading={cabeceras.isLoading}
+          errMess={cabeceras.errMess}
+        />
+        <RenderItem
+          item={excursiones.excursiones.filter((item) => item.destacado)[0]}
+          isLoading={excursiones.isLoading}
+          errMess={excursiones.errMess}
+        />
+        <RenderItem
+          item={actividades.actividades.filter((item) => item.destacado)[0]}
+          isLoading={actividades.isLoading}
+          errMess={actividades.errMess}
+        />
       </ScrollView>
     );
   }
